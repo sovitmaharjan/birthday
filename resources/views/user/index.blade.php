@@ -11,7 +11,8 @@
                     <a href="{{ route('user.create') }}" class="btn btn-success waves-effect w-md waves-light m-b-5"> <i
                             class="fas fa-plus"></i> Add</a>
                 </div>
-                <table id="user_table" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                <table id="user_table" class="table table-striped table-bordered dt-responsive nowrap"
+                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -26,7 +27,7 @@
                     <tbody>
                         @foreach ($users as $key => $value)
                             <tr>
-                                <td>{{ $key + 1 }}</td>
+                                <td class="sno">{{ $key + 1 }}</td>
                                 <td>{{ $value->name }}</td>
                                 <td>{{ $value->email }}</td>
                                 <td>{{ $value->address }}</td>
@@ -48,9 +49,10 @@
 
 @push('script')
     <script>
-        $('#user_table').DataTable();
+        var table = $('#user_table').DataTable();
 
         $(document).on('click', '.delete', function() {
+            var row = $(this).closest('tr');
             var id = $(this).data('id');
             swal({
                 title: 'Are you sure?',
@@ -62,23 +64,43 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then(function(result) {
                 if (result.value) {
-                    var url = "{{ route('user.destroy', ':id') }}";
+                    var url = "{{ route('api.user.destroy', ':id') }}";
                     url = url.replace(":id", id);
-                    var form = $('<form></form>');
-                    form.attr('method', 'POST');
-                    form.attr('action', url);
-                    form.append($('<input>').attr({
-                        type: 'hidden',
-                        name: '_token',
-                        value: $('meta[name="csrf-token"]').attr('content')
-                    }));
-                    form.append($('<input>').attr({
-                        type: 'hidden',
-                        name: '_method',
-                        value: 'DELETE'
-                    }))
-                    $('body').append(form);
-                    form.submit();
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            '_method': 'delete'
+                        },
+                        url: url,
+                        success: function() {
+                            table.row(row).remove().draw();
+                            var rows = table.rows().nodes();
+                            rows.each(function(i, e) {
+                                $(e).find('.sno').text(i + 1);
+                            });
+                            toastr.success('User has been deleted');
+                        },
+                        error: function(error) {
+                            toastr.error(error.responseJSON.message)
+                        }
+                    });
+
+                    // =========== without ajax ===========
+                    // var form = $('<form></form>');
+                    // form.attr('method', 'POST');
+                    // form.attr('action', url);
+                    // form.append($('<input>').attr({
+                    //     type: 'hidden',
+                    //     name: '_token',
+                    //     value: $('meta[name="csrf-token"]').attr('content')
+                    // }));
+                    // form.append($('<input>').attr({
+                    //     type: 'hidden',
+                    //     name: '_method',
+                    //     value: 'DELETE'
+                    // }))
+                    // $('body').append(form);
+                    // form.submit();
                 }
             })
         })
