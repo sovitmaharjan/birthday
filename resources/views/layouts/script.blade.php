@@ -48,6 +48,64 @@
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
     }
+
+    var table = $('.data-table').DataTable();
+
+    $(document).on('click', '.delete', function() {
+        var row = $(this).closest('tr');
+        var id = $(this).data('id');
+        var url = $(this).data('api-url');
+        // var url = $(this).data('web-url'); // without ajax url
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4fa7f3',
+            cancelButtonColor: '#d57171',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function(result) {
+            if (result.value) {
+                // var url = "{{ route('api.user.destroy', ':id') }}";
+                // url = url.replace(":id", id);
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        '_method': 'delete'
+                    },
+                    url: url,
+                    success: function() {
+                        table.row(row).remove().draw();
+                        var rows = table.rows().nodes();
+                        rows.each(function(e, i) {
+                            $(e).find('.sno').text(i + 1);
+                        });
+                        toastr.success('User has been deleted');
+                    },
+                    error: function(error) {
+                        toastr.error(error.responseJSON.message)
+                    }
+                });
+
+                // // =========== without ajax ===========
+                // var form = $('<form></form>');
+                // form.attr('method', 'POST');
+                // form.attr('action', url);
+                // form.append($('<input>').attr({
+                //     type: 'hidden',
+                //     name: '_token',
+                //     value: $('meta[name="csrf-token"]').attr('content')
+                // }));
+                // form.append($('<input>').attr({
+                //     type: 'hidden',
+                //     name: '_method',
+                //     value: 'DELETE'
+                // }))
+                // $('body').append(form);
+                // form.submit();
+            }
+        })
+    })
 </script>
 
 @include('layouts.partials.validation')
