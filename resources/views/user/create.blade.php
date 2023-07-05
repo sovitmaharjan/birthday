@@ -34,7 +34,7 @@
                                 <label for="dob">DOB</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control datepicker" id="dob" name="dob"
-                                        placeholder="yyyy-mm-dd" value="{{ old('dob') }}">
+                                        placeholder="yyyy-mm-dd" value="{{ old('dob') }}" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text bg-custom text-white b-0"><i
                                                 class="mdi mdi-calendar"></i></span>
