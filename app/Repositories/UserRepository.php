@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -13,7 +14,7 @@ class UserRepository implements UserRepositoryInterface
         $this->user = $user;    
     }
 
-    public function list($condition = []): User
+    public function list($condition = []): Collection 
     {
         $model = $this->user;
         if (count($condition) > 0) {
@@ -33,13 +34,14 @@ class UserRepository implements UserRepositoryInterface
         return $model->firstOrFail();
     }
 
-    public function update($condition = [], $data): bool
+    public function update($data, $condition = []): bool
     {
         $model = $this->find($condition);
-        return $model->update($data);
+        $model->fill($data);
+        return $model->save();
     }
 
-    public function delete($condition = []): bool
+    public function destroy($condition = []): bool
     {
         $model = $this->find($condition);
         return $model->delete();
