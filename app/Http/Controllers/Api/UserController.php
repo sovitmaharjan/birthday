@@ -17,8 +17,8 @@ class UserController extends Controller
 
     public function destroy($identifier)
     {
-        $condition['where_condition'][] = [
-            'column_name' => 'id',
+        $condition['whereCondition'][] = [
+            'columnName' => 'id',
             'value' => $identifier,
         ];
         try {

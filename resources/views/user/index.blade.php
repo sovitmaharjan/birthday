@@ -8,6 +8,8 @@
         <div class="col-sm-12">
             <div class="card-box table-responsive">
                 <div class="text-right mb-2">
+                    <a href="{{ route('user.index', ['upcoming_birthday' => 1]) }}" class="btn btn-primary waves-effect w-md waves-light m-b-5">Upcoming Birthday</a>
+                    <a href="{{ route('user.index', ['recent_birthday' => 1]) }}" class="btn btn-primary waves-effect w-md waves-light m-b-5">Recent Birthday</a>
                     <a href="{{ route('user.create') }}" class="btn btn-success waves-effect w-md waves-light m-b-5"> <i
                             class="fas fa-plus"></i> Add</a>
                 </div>
