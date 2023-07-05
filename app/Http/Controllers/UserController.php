@@ -6,7 +6,6 @@ use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Repositories\UserRepositoryInterface;
 use Exception;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
